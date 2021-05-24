@@ -1,74 +1,63 @@
 // API URL: https://type.fit/api/quotes
-
-let apiQuotes = [];
-const quoteEl = document.querySelector("#quote");
-const authorEl = document.querySelector("#author");
+const API_URL = "https://type.fit/api/quotes";
+const quoteContainer = document.querySelector(".quote-container");
+const quoteText = document.querySelector("#text");
+const quoteAuthor = document.querySelector("#author");
+const newQuoteBtn = document.querySelector("#new");
+const tweetBtn = document.querySelector("#twitter");
 const loader = document.querySelector(".loader");
-const quoteContainer = document.querySelector("#quote-container");
-
-// Show Loading
+// Loader loading
 function loading() {
   loader.hidden = false;
   quoteContainer.hidden = true;
 }
 
-// Hide Loading
 function complete() {
   loader.hidden = true;
   quoteContainer.hidden = false;
 }
-// Show New Quote
-function newQuote() {
+
+// Get Quote from API
+async function getQuote() {
   loading();
-  // Pick a random quote from apiQuotes array
-  let i = Math.floor(Math.random() * apiQuotes.length);
-  return (quote = apiQuotes[i]);
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  renderQuote(data);
 }
 
-// Render quote and author
-function renderQuote(quote) {
+// Render Quote to DOM
+function renderQuote(quotes) {
+  loading();
+  const random = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[random];
+
+  //   Check if quote author is null, replace with unknown
   if (!quote.author) {
-    authorEl.innerText = "Unknown";
+    quoteAuthor.textContent = "Unknown";
   } else {
-    authorEl.innerText = quote.author;
+    quoteAuthor.textContent = quote.author;
   }
 
-  if (quote.text.length > 50) {
-    quoteEl.classList.add("long-quote");
+  //   Check if quote length > 20, add 'long-quote' class
+  if (quote.text.length > 120) {
+    quoteText.classList.add("long-quote");
   } else {
-    quoteEl.classList.remove("long-quote");
+    quoteText.classList.remove("long-quote");
   }
 
-  //   Set Quote, Hide Loader
-  quoteEl.innerText = quote.text;
+  // Set quote, hide loader
+  quoteText.textContent = quote.text;
   complete();
 }
-// Get quotes from API
-async function getQuotes() {
-  loading();
-  const API_URL = "https://type.fit/api/quotes";
 
-  try {
-    const res = await fetch(API_URL);
-    apiQuotes = await res.json();
-    newQuote();
-    renderQuote(quote);
-  } catch (error) {
-    console.error(error);
-  }
-}
-// On Load
-getQuotes();
-
-// New Quote Generator
-const newQuoteBtn = document.querySelector("#new-quote");
-newQuoteBtn.addEventListener("click", getQuotes);
-
-// Tweet Quote
 function tweetQuote() {
-  const twitterURL = `https://twitter.com/intent/tweet?text=${quoteEl.textContent} - ${authorEl.textContent}`;
-  window.open(twitterURL, "_blank");
+  const tweetURL = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${quoteAuthor.textContent}`;
+  window.open(tweetURL, "_blank");
 }
 
-const tweetBtn = document.querySelector("#twitter");
+// Get new quote
+newQuoteBtn.addEventListener("click", getQuote);
+getQuote();
+
+// Tweet
 tweetBtn.addEventListener("click", tweetQuote);

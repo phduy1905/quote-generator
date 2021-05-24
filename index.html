@@ -20,25 +20,21 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="quote-container" id="quote-container">
-      <!-- Quote -->
-      <div class="quote-text">
+    <div class="quote-container">
+      <div id="quote-text" class="quote-text">
         <i class="fas fa-quote-left"></i>
-        <span id="quote"></span>
+        <span id="text"></span>
       </div>
-      <!-- Author -->
-      <div class="quote-author">
+      <div id="quote-author" class="quote-author">
         <span id="author"></span>
       </div>
-      <!-- Buttons -->
       <div class="button-container">
-        <button class="twitter-button" id="twitter" title="Tweet this!">
+        <button id="twitter" class="btn tweet-btn">
           <i class="fab fa-twitter"></i>
         </button>
-        <button id="new-quote">New Quote</button>
+        <button id="new" class="btn new-btn">New quote</button>
       </div>
     </div>
-    <!-- Loader -->
     <div class="loader"></div>
     <script src="script.js"></script>
   </body>
